@@ -1,0 +1,29 @@
+{
+    "RotorSettings": [
+        {
+            "Wires": "EKMFLGDQVZNTOWYHXUSPAIBRCJ",
+            "Notch": "Y",
+            "TurnOver": "Q"
+        },
+        {
+            "Wires": "AJDKSIRUXBLHWTMCQGZNPYFVOE",
+            "Notch": "M",
+            "TurnOver": "E"
+        },
+        {
+            "Wires": "BDFHJLCPRTXVZNYEIWGAKMUSQO",
+            "Notch": "D",
+            "TurnOver": "V"
+        },
+        {
+            "Wires": "ESOVPZJAYQUIRHXLNFTGKDCMWB",
+            "Notch": "R",
+            "TurnOver": "J"
+        },
+        {
+            "Wires": "VZBRGITYUPSDNHLXAWMJQOFECK",
+            "Notch": "H",
+            "TurnOver": "Z"
+        }
+    ]
+}
