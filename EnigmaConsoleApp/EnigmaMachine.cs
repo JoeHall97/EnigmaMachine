@@ -4,7 +4,45 @@ using System.Text.Json;
 using EnigmaConsoleApp.Models;
 
 namespace EnigmaConsoleApp
-{    
+{
+    public class Rotor
+    {
+        private int[] wires;
+        private int notch;
+        private int currentPosition;
+        private int turnOver;
+        private int offset;
+
+        public Rotor(string wireSettings, int notchPosition, int turnOverPosition, int ringIndex, int ringPosition)
+        {
+            this.notch = notchPosition;
+            this.currentPosition = ringPosition;
+            this.turnOver = turnOverPosition;
+            this.offset = ringIndex;
+            SetRotorWiring(wireSettings);
+        }
+
+        private void SetRotorWiring(string wireSettings)
+        {
+            char[] ws = wireSettings.ToCharArray();
+            wires = new int[26];
+            for (int i = 0; i < wires.Length; i++)
+                wires[i] = (int)ws[i] % 65;
+        }
+
+        /// RETURNS: True if the rotor has been turned over
+        public bool Rotate()
+        {
+            currentPosition = (short)((currentPosition + 1) % 27);
+            return (currentPosition - 1) == turnOver;
+        }
+
+        public int GetOutputWire(int input)
+        {
+            return wires[input];
+        }
+    }
+
     public class EnigmaMachine
     {
         // HOW DOES THE ENIGMA MACHINE WORK?
@@ -32,44 +70,6 @@ namespace EnigmaConsoleApp
         // * Rotor Starting Position 
         // * Plug Board Settings
 
-        public class Rotor
-        {
-            private int[] wires;
-            private int notch;
-            private int currentPosition;
-            private int turnOver;
-            private int offset;
-
-            public Rotor(string wireSettings, int notchPosition, int turnOverPosition, int ringIndex, int ringPosition)
-            {
-                this.notch = notchPosition;
-                this.currentPosition = ringPosition;
-                this.turnOver = turnOverPosition;
-                this.offset = ringIndex;
-                SetRotorWiring(wireSettings);
-            }
-
-            private void SetRotorWiring(string wireSettings)
-            {
-                char[] ws = wireSettings.ToCharArray();
-                wires = new int[26];
-                for (int i=0;i<wires.Length;i++)
-                    wires[i] = (int)ws[i]%65;
-            }
-
-            /// RETURNS: True if the rotor has been turned over
-            public bool Rotate()
-            {
-                currentPosition = (short)((currentPosition + 1) % 27);
-                return (currentPosition-1) == turnOver;
-            }
-
-            public int GetOutputWire(int input)
-            {
-                return wires[input];
-            }
-        }
-
         private Rotor[] rotors;
         private int[]? plugs;
         // UKW-B Reflector Setting
@@ -96,17 +96,18 @@ namespace EnigmaConsoleApp
         {            
             try
             {
-                string jsonRotorString = File.ReadAllText("Rotor Settings/Enigma1Rotors.json");
+                string jsonRotorString = File.ReadAllText(enigmaRotorFile);
                 EngimaRotorSettings ers = JsonSerializer.Deserialize<EngimaRotorSettings>(jsonRotorString)!;
-                string jsonMachineString = File.ReadAllText("Enigma Settings/Enigma1Settings1.json");
+                string jsonMachineString = File.ReadAllText(engimaSettingsFile);
                 EnigmaMachineSettings ems = JsonSerializer.Deserialize<EnigmaMachineSettings>(jsonMachineString)!;
 
                 if (ers == null)
                     throw new ArgumentException("Provided rotor setting file does not cotain RotorSettings.");
-                if (ems == null || ems.Rotors == null || ems.StartPositions == null)
+                if (ems.Rotors == null || ems.StartPositions == null)
                     throw new ArgumentException("Provided machine setting file is not formateted correctly.");
 
-                rotors = new EnigmaMachine.Rotor[3];
+                rotors = new Rotor[3];
+
                 for (int i=0;i<3;i++)
                 {
                     int selectedRotor = ems.Rotors[i];
@@ -114,11 +115,13 @@ namespace EnigmaConsoleApp
                     int notchPosition = ers.RotorSettings[selectedRotor].Notch.ToCharArray()[0];
                     int turnOverPosition = ers.RotorSettings[selectedRotor].TurnOver.ToCharArray()[0];
                     int ringPosition = ems.StartPositions[i];
-                    rotors[i] = new EnigmaMachine.Rotor(rotorWireSettings,notchPosition,turnOverPosition,0,ringPosition);
+                    
+                    rotors[i] = new Rotor(rotorWireSettings,notchPosition,turnOverPosition,0,ringPosition);
                 }
             } catch(Exception e)
             {
                 Console.Error.WriteLine(e.Message);
+                return;
             }
             SetReflectorWiring("YRUHQSLDPXNGOKMIEBFZCWVJAT");
         }
