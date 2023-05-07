@@ -21,12 +21,16 @@ namespace EnigmaConsoleApp
                 directory = Directory.GetParent(directory)?.ToString();
             }
 
-            string rotorSettingsPath = Path.Combine(directory, "Rotor Settings", "Enigma1Rotors.json");
-            string machineSettingsPath = Path.Combine(directory, "Enigma Settings", "Enigma1Settings1.json");
+            try
+            {
+                EnigmaMachine em = new EnigmaMachine(directory, "Enigma1Rotors.json", "Enigma1Settings1.json");
 
-            EnigmaMachine em = new EnigmaMachine(rotorSettingsPath, machineSettingsPath);
-            
-            Console.WriteLine(em.EncryptString("THEQUICKBROWNFOXJUMPEDOVERTHELAZYDOG"));
+                Console.WriteLine(em.EncryptString("THEQUICKBROWNFOXJUMPEDOVERTHELAZYDOG"));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

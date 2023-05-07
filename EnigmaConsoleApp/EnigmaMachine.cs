@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using EnigmaConsoleApp.Models;
 
@@ -55,7 +56,8 @@ namespace EnigmaConsoleApp
 
         // ROTORS
         // Each rotor has wiring in it that links an input letter to a different output letter.
-        // Signals come into the rotors from the keyboard, go throught the rotors, are then sent through a reflector, back through the rotors again, and then to the lamp board.
+        // Signals come into the rotors from the keyboard, go throught the rotors, are then sent through a reflector,
+        // back through the rotors again, and then to the lamp board.
         // NOTE: the reflector wires the letters in pairs.
         // Each rotor can be set to one of it's 26 positions.
         // Each time a key is pressed the first rotor in the circuit is rotated.
@@ -72,7 +74,6 @@ namespace EnigmaConsoleApp
 
         private Rotor[] rotors;
         private int[]? plugs;
-        // UKW-B Reflector Setting
         private int[] reflector;
 
         public EnigmaMachine() 
@@ -85,45 +86,68 @@ namespace EnigmaConsoleApp
             SetPlugs(new string[]{"ZA"});
         }
 
-        public EnigmaMachine(Rotor[] rotors, string[] plugSettings)
+        public EnigmaMachine(Rotor[] rotors, string[] plugSettings, string reflectorSetting)
         {
             this.rotors = rotors;
-            SetReflectorWiring("YRUHQSLDPXNGOKMIEBFZCWVJAT");
+            SetReflectorWiring(reflectorSetting);
             SetPlugs(plugSettings);
         }
 
-        public EnigmaMachine(string enigmaRotorFile, string engimaSettingsFile)
-        {            
+        public EnigmaMachine(string parentDirName, string enigmaRotorFile, string engimaSettingsFile)
+        {
+            EngimaRotorSettings? rotorSettings = null;
+            EnigmaMachineSettings? machineSettings = null;
+            EnigmaReflectorSettings? reflectorSettings = null;
+
             try
             {
-                string jsonRotorString = File.ReadAllText(enigmaRotorFile);
-                EngimaRotorSettings ers = JsonSerializer.Deserialize<EngimaRotorSettings>(jsonRotorString)!;
-                string jsonMachineString = File.ReadAllText(engimaSettingsFile);
-                EnigmaMachineSettings ems = JsonSerializer.Deserialize<EnigmaMachineSettings>(jsonMachineString)!;
-
-                if (ers == null)
-                    throw new ArgumentException("Provided rotor setting file does not cotain RotorSettings.");
-                if (ems.Rotors == null || ems.StartPositions == null)
-                    throw new ArgumentException("Provided machine setting file is not formateted correctly.");
-
-                rotors = new Rotor[3];
-
-                for (int i=0;i<3;i++)
-                {
-                    int selectedRotor = ems.Rotors[i];
-                    string? rotorWireSettings = ers?.RotorSettings[selectedRotor].Wires;
-                    int notchPosition = ers.RotorSettings[selectedRotor].Notch.ToCharArray()[0];
-                    int turnOverPosition = ers.RotorSettings[selectedRotor].TurnOver.ToCharArray()[0];
-                    int ringPosition = ems.StartPositions[i];
-                    
-                    rotors[i] = new Rotor(rotorWireSettings,notchPosition,turnOverPosition,0,ringPosition);
-                }
-            } catch(Exception e)
+                string jsonRotorString = File.ReadAllText(Path.Combine(parentDirName, "Rotor Settings", enigmaRotorFile));
+                rotorSettings = JsonSerializer.Deserialize<EngimaRotorSettings>(jsonRotorString)!;
+                
+                string jsonMachineString = File.ReadAllText(Path.Combine(parentDirName, "Enigma Settings", engimaSettingsFile));
+                machineSettings = JsonSerializer.Deserialize<EnigmaMachineSettings>(jsonMachineString)!;
+                
+                string jsonReflectorString = File.ReadAllText(Path.Combine(parentDirName, "Reflector Settings", "EnigmaReflectors.json"));
+                reflectorSettings = JsonSerializer.Deserialize<EnigmaReflectorSettings>(jsonReflectorString)!;
+            }
+            catch (Exception e)
             {
                 Console.Error.WriteLine(e.Message);
-                return;
             }
-            SetReflectorWiring("YRUHQSLDPXNGOKMIEBFZCWVJAT");
+
+            if (rotorSettings == null)
+                throw new ArgumentException("Provided rotor setting file does not exists or is malformed.");
+            
+            if (machineSettings == null) 
+                throw new ArgumentException("Provided Engima settings file may does not exist or is malformed.");
+            if (machineSettings.Rotors == null || machineSettings.StartPositions == null)
+                throw new ArgumentException("Provided machine setting file is not formateted correctly.");
+            
+            if (reflectorSettings == null)
+                throw new ArgumentException("Could not find reflector settings in parent directory.");
+
+            rotors = new Rotor[3];
+
+            for (int i=0;i<3;i++)
+            {
+                int selectedRotor = machineSettings.Rotors[i];
+                string? rotorWireSettings = rotorSettings.RotorSettings[selectedRotor].Wires;
+                int notchPosition = rotorSettings.RotorSettings[selectedRotor].Notch.ToCharArray()[0];
+                int turnOverPosition = rotorSettings.RotorSettings[selectedRotor].TurnOver.ToCharArray()[0];
+                int ringPosition = machineSettings.StartPositions[i];
+                
+                rotors[i] = new Rotor(rotorWireSettings, notchPosition, turnOverPosition, 0, ringPosition);
+            }
+
+            var engimaReflectors = reflectorSettings.EnigmaReflectors
+                .FirstOrDefault(reflect => reflect.EnigmaName?.ToLower() == machineSettings.EnigmaName?.ToLower());
+            var reflectorWiring = engimaReflectors?.Reflectors
+                .FirstOrDefault(reflect => reflect.ReflectorName.ToLower() == machineSettings.Reflector.ToLower())?.ReflectorWiring;
+
+            if (reflectorWiring == null)
+                throw new ArgumentException("Could not find reflector settings.");
+
+            SetReflectorWiring(reflectorWiring);
         }
 
         public string EncryptString(string message)

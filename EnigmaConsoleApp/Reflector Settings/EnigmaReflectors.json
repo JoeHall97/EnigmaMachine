@@ -1,0 +1,55 @@
+{
+  "EnigmaReflectors": [
+    {
+      "EnigmaName": "Enigma 1",
+      "Reflectors": [
+        {
+          "ReflectorName": "UKW-A",
+          "ReflectorWiring": "EJMZALYXVBWFCRQUONTSPIKHGD"
+        },
+        {
+          "ReflectorName": "UKW-B",
+          "ReflectorWiring": "YRUHQSLDPXNGOKMIEBFZCWVJAT"
+        },
+        {
+          "ReflectorName": "UKW-C",
+          "ReflectorWiring": "FVPJIAOYEDRZXWGCTKUQSBNMHL"
+        }
+      ]
+    },
+    {
+      "EnigmaName": "Enigma 3",
+      "Reflectors": [
+        {
+          "ReflectorName": "UKW-B",
+          "ReflectorWiring": "YRUHQSLDPXNGOKMIEBFZCWVJAT"
+        },
+        {
+          "ReflectorName": "UKW-C",
+          "ReflectorWiring": "FVPJIAOYEDRZXWGCTKUQSBNMHL"
+        }
+      ]
+    },
+    {
+      "EnigmaName": "Enigma 4",
+      "Reflectors": [
+        {
+          "ReflectorName": "BETA",
+          "ReflectorWiring": "LEYJVCNIXWPBQMDRTAKZGFUHOS"
+        },
+        {
+          "ReflectorName": "GAMMA",
+          "ReflectorWiring": "FSOKANUERHMBTIYCWLQPZXVGJD"
+        },
+        {
+          "ReflectorName": "UKW-B",
+          "ReflectorWiring": "ENKQAUYWJICOPBLMDXZVFTHRGS"
+        },
+        {
+          "ReflectorName": "UKW-C",
+          "ReflectorWiring": "RDOBJNTKVEHMLFCWZAXGYIPSUQ"
+        }
+      ]
+    }
+  ]
+}

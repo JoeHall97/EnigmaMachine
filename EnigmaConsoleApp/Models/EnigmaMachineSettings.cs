@@ -1,14 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnigmaConsoleApp.Models
 {
     public class EnigmaMachineSettings
     {
+        public string? EnigmaName { get; set; }
         public int[]? Rotors { get; set; }
         public int[]? StartPositions { get; set; }
         public string[]? PlugSettings { get; set; }
+        public string? Reflector { get; set; }
     }
 }

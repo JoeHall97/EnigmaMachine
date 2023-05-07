@@ -1,5 +1,7 @@
 {
-  "Rotors": [3,1,2],
-  "StartPositions": [5,10,3],
-  "PlugSettings": ["ZC"]
+  "EnigmaName":  "Enigma 1",
+  "Rotors": [ 3, 1, 2 ],
+  "StartPositions": [ 5, 10, 3 ],
+  "PlugSettings": [ "ZC" ],
+  "Reflector":  "UKW-B"
 }
