@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "EnigmaConsoleApp"
+		},
+		{
+			"path": "EnigmaConsoleApp.Tests"
+		}
+	],
+	"settings": {}
+}

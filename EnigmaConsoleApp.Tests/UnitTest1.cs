@@ -1,13 +1,17 @@
-﻿using System;
+using Xunit;
+using EnigmaConsoleApp;
+using System;
 using System.IO;
 
-namespace EnigmaConsoleApp;
+namespace EnigmaConsoleApp.Tests;
 
-class EnigmaConsoleApp
+public class UnitTest1
 {
-    public static void Main(string[] args)
+    [Fact]
+    public void TestReadingFromFile()
     {
         var directory = Directory.GetCurrentDirectory();
+        
         if (!Directory.Exists(Path.Combine(directory, "Rotor Settings")))
         {
             // this is dumb
@@ -21,7 +25,7 @@ class EnigmaConsoleApp
         string machineSettingsPath = Path.Combine(directory, "Enigma Settings", "Enigma1Settings1.json");
 
         EnigmaMachine em = new EnigmaMachine(rotorSettingsPath, machineSettingsPath);
-            
-        Console.WriteLine(em.EncryptString("THEQUICKBROWNFOXJUMPEDOVERTHELAZYDOG"));
+
+        Assert.NotNull(em);
     }
 }

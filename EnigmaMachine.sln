@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnigmaConsoleApp", "EnigmaConsoleApp\EnigmaConsoleApp.csproj", "{E067068D-8D6A-4671-B72B-40900C2FEDAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnigmaMachineTest", "EnigmaMachineTest\EnigmaMachineTest.csproj", "{1F3090DB-92E2-47D8-B137-6F56A1D67B00}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnigmaConsoleApp.Tests", "EnigmaConsoleApp.Tests\EnigmaConsoleApp.Tests.csproj", "{C763C125-DDED-4006-BC13-62E22D219FB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +24,9 @@ Global
 		{1F3090DB-92E2-47D8-B137-6F56A1D67B00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F3090DB-92E2-47D8-B137-6F56A1D67B00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F3090DB-92E2-47D8-B137-6F56A1D67B00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C763C125-DDED-4006-BC13-62E22D219FB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C763C125-DDED-4006-BC13-62E22D219FB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C763C125-DDED-4006-BC13-62E22D219FB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C763C125-DDED-4006-BC13-62E22D219FB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
