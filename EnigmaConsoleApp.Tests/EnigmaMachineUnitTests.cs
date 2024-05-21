@@ -5,8 +5,12 @@ using System.IO;
 
 namespace EnigmaConsoleApp.Tests;
 
-public class UnitTest1
+public class EnigmaMachineUnitTests
 {
+    /// <summary>
+    /// Tests that info read in from files correctly allows for a new
+    /// EnigmaMachine to be initialised.
+    /// </summary>
     [Fact]
     public void TestReadingFromFile()
     {
@@ -24,8 +28,18 @@ public class UnitTest1
         string rotorSettingsPath = Path.Combine(directory, "Rotor Settings", "Enigma1Rotors.json");
         string machineSettingsPath = Path.Combine(directory, "Enigma Settings", "Enigma1Settings1.json");
 
-        EnigmaMachine em = new EnigmaMachine(rotorSettingsPath, machineSettingsPath);
+        try
+        {
+            string jsonRotorString = File.ReadAllText(rotorSettingsPath);
+            EngimaRotorSettings ers = JsonSerializer.Deserialize<EngimaRotorSettings>(jsonRotorString)!;
+            string jsonMachineString = File.ReadAllText(machineSettingsPath);
+            EnigmaMachineSettings ems = JsonSerializer.Deserialize<EnigmaMachineSettings>(jsonMachineString)!;
 
-        Assert.NotNull(em);
+            EnigmaMachine em = new EnigmaMachine(ers, ems);
+            Assert.NotNull(em);
+        } catch(Exception e)
+        {
+            Assert.Fail(e.StackTrace);
+        }
     }
 }
